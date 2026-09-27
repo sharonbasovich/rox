@@ -13,10 +13,6 @@ behavior observed directly in Rox that was not caused by the test setup.
 | 3 | The enriched `Industries` field renders as a raw JSON string. | Record Truth-Check | `/account` |
 | 4 | "New sequence" creates `Sequence - <date>` before any step is added or saved. | Brief only | - |
 
-**Deliberately left out:** seller-specific pitches (fictional test company, so Rox rightly declined), empty
-states / integrations / People ranking (not configured), agent previews and action limits (Enterprise-gated,
-and documented by Rox), latency (single runs), and unusual test accounts in the workspace (origin unknown).
-
  fit.
 
 ## Architecture

@@ -39,14 +39,6 @@ const FINDINGS: Finding[] = [
   },
 ];
 
-const EXCLUDED = [
-  'Seller-specific pitches: the test company was fictional, so Rox correctly declined to tailor a pitch.',
-  'Empty states, integrations and People ranking: no integrations or real ICP were configured.',
-  'Agent previews and limits: templates were Enterprise-gated, and Rox documents previews, sandboxes and action limits.',
-  'Latency: one run each, not a benchmark.',
-  'Unusual test accounts in the workspace: I did not create them and their origin is unknown, so they are not treated as a product issue.',
-];
-
 export default function Findings() {
   return (
     <>
@@ -76,9 +68,6 @@ export default function Findings() {
             ))}
           </tbody>
         </table>
-      </Card>
-      <Card title="Deliberately left out">
-        <ul className="tldr">{EXCLUDED.map((e) => <li key={e} className="muted">{e}</li>)}</ul>
       </Card>
     </>
   );
