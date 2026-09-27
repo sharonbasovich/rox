@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { RECORDED_RUN } from '../shared/recorded.ts';
 import { createSession, devinConfigured, getSession } from './devin.ts';
 
 export type JobKind = 'verify_claims';
@@ -57,7 +58,7 @@ const jobs = new Map<string, Job>();
 export async function startJob(kind: JobKind, input: unknown, recorded: unknown): Promise<Job> {
   const id = randomUUID();
   if (!devinConfigured()) {
-    const job: Job = { id, kind, mode: 'recorded', status: 'done', createdAt: Date.now(), output: recorded };
+    const job: Job = { id, kind, mode: 'recorded', status: 'done', createdAt: Date.now(), sessionUrl: RECORDED_RUN.sessionUrl, output: recorded };
     jobs.set(id, job);
     return job;
   }

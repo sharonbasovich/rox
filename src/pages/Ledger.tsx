@@ -12,6 +12,9 @@ export default function Ledger() {
   const [filter, setFilter] = useState<'all' | 'critical' | 'low'>('all');
   const summary = useMemo(() => summarizeLedger(SCORED_CLAIMS), []);
   const { job, elapsed, start } = useJob<{ verdicts: Verdict[] }>('verify_claims');
+  const counts = { supported: 0, contradicted: 0, unverifiable: 0 };
+  for (const v of job?.output?.verdicts ?? []) counts[v.verdict] += 1;
+  const weakCount = SCORED_CLAIMS.filter((c) => c.confidence !== 'high').length;
   const verdicts = new Map((job?.output?.verdicts ?? []).map((v) => [v.id, v]));
 
   const rows = SCORED_CLAIMS.filter((c) =>
@@ -55,7 +58,19 @@ export default function Ledger() {
           </div>
         }
       >
+        {!job && (
+          <p className="muted small">
+            "Verify weak claims with agent" sends the {weakCount} claims that aren't high confidence to a Devin agent. It searches the web for each one and
+            returns a verdict (supported, contradicted or unverifiable), a correction if the brief is wrong, and a source link. Results appear in a new Verifier column.
+          </p>
+        )}
         <JobStatus job={job} elapsed={elapsed} />
+        {job?.status === 'done' && job.output && (
+          <p className="small">
+            <b>Agent checked {job.output.verdicts.length} claims:</b> {counts.supported} supported, <b style={{ color: 'var(--bad)' }}>{counts.contradicted} contradicted</b>, {counts.unverifiable} unverifiable.
+            Contradicted rows show the correction.
+          </p>
+        )}
         <table className="table">
           <thead><tr><th>Claim</th><th>Sources</th><th>Runs</th><th>Confidence</th><th>Why</th>{job && <th>Verifier</th>}</tr></thead>
           <tbody>
