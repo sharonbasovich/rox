@@ -5,7 +5,7 @@ import type { FieldSuggestion } from '../../shared/types.ts';
 import { Card, ConfidencePill, PageHead, Tag } from '../components/ui.tsx';
 import { SCORED_CLAIMS } from '../lib/claims.ts';
 
-type Decision = 'accepted' | 'rejected';
+type Decision = 'accepted' | 'rejected' | 'queued';
 
 interface AuditEntry {
   at: string;
@@ -39,7 +39,7 @@ export default function Account() {
   function decide(s: FieldSuggestion, d: Decision) {
     setDecisions((prev) => ({ ...prev, [s.fieldKey]: d }));
     setAudit((prev) => [
-      { at: new Date().toLocaleTimeString(), field: s.label, from: s.current || '∅', to: d === 'accepted' ? s.display : s.current || '∅', decision: d, evidence: s.evidenceClaimIds },
+      { at: new Date().toLocaleTimeString(), field: s.label, from: s.current || '∅', to: d === 'accepted' ? s.display : d === 'queued' ? 're-enrichment queued' : s.current || '∅', decision: d, evidence: s.evidenceClaimIds },
       ...prev,
     ]);
   }
@@ -94,12 +94,12 @@ export default function Account() {
               })}
               <div className="actions">
                 {decisions[s.fieldKey] ? (
-                  <Tag tone={decisions[s.fieldKey] === 'accepted' ? 'good' : 'neutral'}>{decisions[s.fieldKey]}</Tag>
+                  <Tag tone={decisions[s.fieldKey] === 'accepted' ? 'good' : decisions[s.fieldKey] === 'queued' ? 'ai' : 'neutral'}>{decisions[s.fieldKey] === 'queued' ? 're-enrichment queued' : decisions[s.fieldKey]}</Tag>
                 ) : (
                   <>
                     <button className="btn primary" onClick={() => decide(s, 'accepted')} disabled={s.kind === 'unverified'}>Accept</button>
                     <button className="btn" onClick={() => decide(s, 'rejected')}>Reject</button>
-                    {s.kind === 'unverified' && <button className="btn" onClick={() => decide(s, 'rejected')}>Queue re-enrichment</button>}
+                    {s.kind === 'unverified' && <button className="btn" onClick={() => decide(s, 'queued')}>Queue re-enrichment</button>}
                     {s.confidence === 'low' && s.kind === 'conflict' && <span className="muted small">Low confidence: the agent's figure has no citation</span>}
                   </>
                 )}
@@ -111,7 +111,7 @@ export default function Account() {
               <table className="table small">
                 <tbody>
                   {audit.map((a, i) => (
-                    <tr key={i}><td>{a.at}</td><td><b>{a.field}</b></td><td>{a.from} → {a.to}</td><td><Tag tone={a.decision === 'accepted' ? 'good' : 'neutral'}>{a.decision}</Tag></td><td className="muted">{a.evidence.join(', ') || 'rule'}</td></tr>
+                    <tr key={i}><td>{a.at}</td><td><b>{a.field}</b></td><td>{a.from} → {a.to}</td><td><Tag tone={a.decision === 'accepted' ? 'good' : a.decision === 'queued' ? 'ai' : 'neutral'}>{a.decision}</Tag></td><td className="muted">{a.evidence.join(', ') || 'rule'}</td></tr>
                   ))}
                 </tbody>
               </table>
