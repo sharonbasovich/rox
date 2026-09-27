@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { recordedVerdicts } from '../../shared/recorded.ts';
+import { RECORDED_RUN, recordedVerdicts } from '../../shared/recorded.ts';
 
 export interface Job<T> {
   id: string;
@@ -52,7 +52,7 @@ export function useJob<T>(kind: 'verify_claims') {
     stop();
     setElapsed(0);
     if (STATIC) {
-      setJob({ id: 'recorded', mode: 'recorded', status: 'done', createdAt: Date.now(), output: recordedVerdicts() as T });
+      setJob({ id: 'recorded', mode: 'recorded', status: 'done', createdAt: Date.now(), sessionUrl: RECORDED_RUN.sessionUrl, output: recordedVerdicts() as T });
       return;
     }
     const started = await postJson<Job<T>>('/api/jobs', { kind, input });

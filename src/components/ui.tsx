@@ -48,10 +48,10 @@ export function JobStatus({ job, elapsed }: { job: { mode: string; status: strin
   if (!job) return null;
   return (
     <div className={`jobbar jobbar-${job.status}`}>
-      <Tag tone="ai">{job.mode === 'live' ? 'Devin live' : 'Recorded'}</Tag>
+      <Tag tone="ai">{job.mode === 'live' ? 'Devin live' : 'Replay'}</Tag>
       <span>
         {job.status === 'running' && `Running: ${elapsed}s${job.devinStatus ? ` (${job.devinStatus})` : ''}`}
-        {job.status === 'done' && 'Complete'}
+        {job.status === 'done' && (job.mode === 'live' ? 'Complete' : 'Replaying a real Devin run from Sep 27, 2026')}
         {job.status === 'error' && `Error: ${job.error}`}
       </span>
       {job.sessionUrl && (
