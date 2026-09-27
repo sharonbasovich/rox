@@ -15,7 +15,7 @@ behavior observed directly in Rox that was not caused by the test setup.
 
 **Deliberately left out:** seller-specific pitches (fictional test company, so Rox rightly declined), empty
 states / integrations / People ranking (not configured), agent previews and action limits (Enterprise-gated,
-and documented by Rox), latency (single runs), and unusual test accounts in the workspace (not created by Rox).
+and documented by Rox), latency (single runs), and unusual test accounts in the workspace (origin unknown).
 
  fit.
 

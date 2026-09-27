@@ -19,7 +19,7 @@ const FINDINGS: Finding[] = [
   },
   {
     area: 'Source strength',
-    observed: 'Rox cites every statement, which is a strong base. In the OpenAI brief the new CRO was cited only to derrick-app.com (a sales-tool blog), and the brief then made that person the primary outreach target. The citation chip looks the same as one to CNBC or openai.com.',
+    observed: 'Rox shows inline citations, which is a strong base. In the OpenAI brief the new CRO was cited only to derrick-app.com (a sales-tool blog), and the brief then made that person the primary outreach target. The citation chip looks the same as one to CNBC or openai.com.',
     impact: 'A single weak citation on a decision-critical fact (who to email) carries the same visual weight as a primary source. Surfacing tier, corroboration and freshness shows the rep which claims to double-check.',
     proto: { to: '/ledger', label: 'Evidence Ledger' },
     severity: 'medium',
@@ -44,7 +44,7 @@ const EXCLUDED = [
   'Empty states, integrations and People ranking: no integrations or real ICP were configured.',
   'Agent previews and limits: templates were Enterprise-gated, and Rox documents previews, sandboxes and action limits.',
   'Latency: one run each, not a benchmark.',
-  'Unusual test accounts in the workspace were not created by Rox and are not treated as a product issue.',
+  'Unusual test accounts in the workspace: I did not create them and their origin is unknown, so they are not treated as a product issue.',
 ];
 
 export default function Findings() {
