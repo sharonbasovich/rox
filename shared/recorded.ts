@@ -1,5 +1,5 @@
-import { CAPTURED_AT, CLAIMS } from '../shared/data.ts';
-import { scoreLedger } from '../shared/ledger.ts';
+import { CAPTURED_AT, CLAIMS } from './data.ts';
+import { scoreLedger } from './ledger.ts';
 
 /** Deterministic outputs used when no Devin key is configured, so the demo always works offline. */
 export function recordedVerdicts() {
