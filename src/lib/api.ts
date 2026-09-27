@@ -29,7 +29,7 @@ export function useHealth(): 'devin' | 'recorded' | 'offline' | 'loading' {
 }
 
 /** Start an AI job and poll it until it finishes. */
-export function useJob<T>(kind: 'verify_claims' | 'seller_angles') {
+export function useJob<T>(kind: 'verify_claims') {
   const [job, setJob] = useState<Job<T> | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const timer = useRef<number | null>(null);

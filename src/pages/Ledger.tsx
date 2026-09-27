@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { CLAIM_DEPENDENCIES, RUN_TELEMETRY } from '../../shared/data.ts';
+import { CLAIM_DEPENDENCIES } from '../../shared/data.ts';
 import { summarizeLedger } from '../../shared/ledger.ts';
 import { TIER_LABEL } from '../../shared/sources.ts';
 import { Card, ConfidencePill, JobStatus, PageHead, Tag } from '../components/ui.tsx';
@@ -29,7 +29,7 @@ export default function Ledger() {
       <PageHead
         kicker="Prototype 2 · Claim-level provenance"
         title="Evidence Ledger"
-        sub="The same OpenAI brief Rox produced, split into atomic claims. Each claim is scored on source tier, independent corroboration, cross-run agreement and freshness. Recommendations inherit the confidence of the claims they depend on."
+        sub="Rox already cites a source next to each statement. This builds on those citations: the OpenAI brief is split into atomic claims, each scored on source tier, independent corroboration, agreement across runs and freshness. Recommendations inherit the confidence of the claims they depend on."
       />
       <div className="grid4">
         <Card><div className="stat">{summary.total}</div><div className="stat-l">claims extracted</div></Card>
@@ -38,7 +38,7 @@ export default function Ledger() {
         <Card><div className="stat warn">{summary.aggregatorOnly}</div><div className="stat-l">rest only on blogs / aggregators</div></Card>
       </div>
 
-      <Card title="Answer-first TL;DR" right={<span className="muted small">Could stream at ~2s from cached, high-confidence claims. Rox's first text arrived at {RUN_TELEMETRY[0].firstTokenSec}s and the full brief at {RUN_TELEMETRY[0].totalSec}s.</span>}>
+      <Card title="Safe to act on" right={<span className="muted small">Highest-confidence claims from the brief</span>}>
         <ul className="tldr">{tldr.map((c) => <li key={c.id}>{c.text} <ConfidencePill c={c.confidence} /></li>)}</ul>
       </Card>
 

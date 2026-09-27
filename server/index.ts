@@ -1,11 +1,9 @@
 import express from 'express';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { checkDomain } from '../shared/domainGuard.ts';
-import type { SellerProfile } from '../shared/types.ts';
 import { devinConfigured } from './devin.ts';
 import { refreshJob, startJob, type JobKind } from './jobs.ts';
-import { recordedAngles, recordedVerdicts } from './recorded.ts';
+import { recordedVerdicts } from './recorded.ts';
 
 const app = express();
 app.use(express.json({ limit: '256kb' }));
@@ -14,22 +12,14 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, ai: devinConfigured() ? 'devin' : 'recorded' });
 });
 
-app.post('/api/domain/check', (req, res) => {
-  const domain = typeof req.body?.domain === 'string' ? req.body.domain : '';
-  res.json(checkDomain(domain));
-});
-
 app.post('/api/jobs', async (req, res) => {
   const kind = req.body?.kind as JobKind;
-  if (kind !== 'verify_claims' && kind !== 'seller_angles') {
+  if (kind !== 'verify_claims') {
     res.status(400).json({ error: 'unknown job kind' });
     return;
   }
   const input: unknown = req.body?.input ?? {};
-  const recorded = kind === 'verify_claims'
-    ? recordedVerdicts()
-    : recordedAngles((input as { seller?: SellerProfile }).seller);
-  res.json(await startJob(kind, input, recorded));
+  res.json(await startJob(kind, input, recordedVerdicts()));
 });
 
 app.get('/api/jobs/:id', async (req, res) => {
