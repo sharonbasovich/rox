@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NAV } from '../lib/nav.tsx';
 import type { Confidence } from '../../shared/types.ts';
@@ -28,16 +28,19 @@ export function Tag({ children, tone = 'neutral' }: { children: ReactNode; tone?
 export function PageHead({ kicker, title, sub }: { kicker: string; title: string; sub: ReactNode }) {
   const { pathname } = useLocation();
   const item = NAV.find((n) => n.to === pathname);
-  const Icon = item?.Icon;
+  const [lead, ...rest] = kicker.split(' · ');
   return (
-    <>
-      <header className="topbar">
-        {Icon && <span className="page-icon" style={{ '--hue': item.hue } as CSSProperties}><Icon size={17} strokeWidth={1.75} /></span>}
-        <h1>{title}</h1>
-        <span className="topbar-kicker">{kicker}</span>
-      </header>
+    <section className="hero">
+      <div className="eyebrow">
+        {item && <span className="eyebrow-tag">NEW</span>}
+        {lead}
+      </div>
+      <h1>
+        {title}
+        {rest.length > 0 && <span className="h-muted"><br />{rest.join(' · ')}</span>}
+      </h1>
       <p className="sub">{sub}</p>
-    </>
+    </section>
   );
 }
 
