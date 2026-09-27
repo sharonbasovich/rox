@@ -46,7 +46,7 @@ code, .mono { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, mo
 .hero > * { position: relative; z-index: 1; }
 .eyebrow { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); margin-bottom: 18px; }
 .eyebrow-tag { font-size: 12px; letter-spacing: .84px; color: var(--blue); }
-h1 { font-family: var(--serif); font-weight: 420; font-size: 52px; line-height: 1.1; letter-spacing: -.02em; margin: 0 0 18px; color: var(--ink-2); max-width: 900px; }
+h1 { font-family: var(--serif); font-weight: 420; font-size: 52px; line-height: 1.1; letter-spacing: -.02em; margin: 0 0 18px; color: var(--ink-2); max-width: 900px; text-wrap: balance; }
 .h-muted { color: var(--muted); }
 .sub { font-family: var(--sans); font-size: 18px; line-height: 1.4; color: var(--faint); margin: 0; max-width: 760px; }
 h3, h4 { font-family: var(--serif); font-weight: 420; letter-spacing: -.02em; }

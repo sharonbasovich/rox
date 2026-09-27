@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { devinConfigured } from './devin.ts';
 import { refreshJob, startJob, type JobKind } from './jobs.ts';
-import { recordedVerdicts } from './recorded.ts';
+import { recordedVerdicts } from '../shared/recorded.ts';
 
 const app = express();
 app.use(express.json({ limit: '256kb' }));
