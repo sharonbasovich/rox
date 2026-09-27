@@ -11,62 +11,40 @@ interface Finding {
 
 const FINDINGS: Finding[] = [
   {
-    area: 'Research quality', severity: 'high',
-    observed: 'The OpenAI brief named a "new CRO" from a single blog source (derrick-app.com), then made that person the primary outreach target.',
-    impact: 'Reps act on the least-verified claim. No claim-level confidence or dependency tracking.',
+    area: 'Record vs. agent output',
+    observed: 'On the OpenAI account, the Rox-enriched Revenue field reads 2000000. On the same account, the Account Plan agent wrote "$40B revenue run rate". Nothing flagged the conflict or offered to update the field.',
+    impact: 'Reps and downstream agents read the record, not the plan. Research that never reaches the record, or contradicts it silently, erodes trust in both.',
+    proto: { to: '/account', label: 'Record Truth-Check' },
+    severity: 'high',
+  },
+  {
+    area: 'Source strength',
+    observed: 'Rox shows inline citations, which is a strong base. In the OpenAI brief the new CRO was cited only to derrick-app.com (a sales-tool blog), and the brief then made that person the primary outreach target. The citation chip looks the same as one to CNBC or openai.com.',
+    impact: 'A single weak citation on a decision-critical fact (who to email) carries the same visual weight as a primary source. Surfacing tier, corroboration and freshness shows the rep which claims to double-check.',
     proto: { to: '/ledger', label: 'Evidence Ledger' },
+    severity: 'medium',
   },
   {
-    area: 'Data consistency', severity: 'high',
-    observed: 'Account record shows Revenue = 2000000; the Account Plan agent wrote "$40B run rate" for the same account minutes later.',
-    impact: 'The CRM and the agents disagree, and nothing reconciles them. The rep sees both.',
+    area: 'Rendering',
+    observed: 'The enriched Industries field renders as a raw JSON string: ["Software", "Engineering Software"].',
+    impact: 'Small, but it is on the account header of every enriched account.',
     proto: { to: '/account', label: 'Record Truth-Check' },
+    severity: 'low',
   },
   {
-    area: 'Security / data hygiene', severity: 'high',
-    observed: 'Accounts with domains 127.0.0.1, 169.254.169.254 (cloud metadata) and a\'b.example exist in the workspace.',
-    impact: 'Domains feed enrichment and web-fetch tools, so they need validation at write time (SSRF surface).',
-    proto: { to: '/accounts', label: 'Domain Guardrails' },
+    area: 'Sequences',
+    observed: 'Clicking "New sequence" immediately creates "Sequence - <date>" before a step is added or anything is saved.',
+    impact: 'Abandoned attempts leave empty sequences in the list. Creating on first save avoids that.',
+    severity: 'low',
   },
-  {
-    area: 'Personalization', severity: 'high',
-    observed: 'Chat: "I can\'t tailor the pitch to a specific SKU" because onboarding only captures a company name.',
-    impact: 'The same generic angles for every seller. A structured seller profile would make every agent output specific.',
-    proto: { to: '/seller', label: 'Seller Context' },
-  },
-  {
-    area: 'Latency', severity: 'medium',
-    observed: 'Brief took 124s total (first text at ~12s); account plan took 94s. No ETA, partial-answer, or cancel affordance.',
-    impact: 'Answer-first streaming (TL;DR in <5s, then deepen) would change how fast it feels.',
-    proto: { to: '/evals', label: 'Eval Console' },
-  },
-  {
-    area: 'Agent safety', severity: 'medium',
-    observed: 'Agent templates (e.g. Signals Driven Outbound) go live with no preview of target accounts, side effects or action budget.',
-    impact: 'A dry run with side-effect and quota preview builds trust before an agent sends email or writes to the CRM.',
-    proto: { to: '/dry-run', label: 'Agent Dry Run' },
-  },
-  {
-    area: 'Rendering', severity: 'low',
-    observed: 'Multi-value fields render as raw JSON: Industries = ["Software", "Engineering Software"].',
-    impact: 'Small, but it is the first thing you see on every account.',
-    proto: { to: '/account', label: 'Record Truth-Check' },
-  },
-  {
-    area: 'Activation', severity: 'medium',
-    observed: 'Meetings, Opportunities, Apps and many agent templates are empty or gated (calendar integration, Teams plan, Enterprise plan), and each page explains its gate differently.',
-    impact: 'A single "what unlocks what" readiness view would show users the next best integration to connect.',
-  },
-  {
-    area: 'Sequences', severity: 'low',
-    observed: 'Clicking "New sequence" immediately creates "Sequence - <date>" before any step is added.',
-    impact: 'Abandoned drafts pile up. Create the sequence on the first save instead.',
-  },
-  {
-    area: 'People search', severity: 'low',
-    observed: 'Default prospecting results are not ranked against the workspace ICP.',
-    impact: 'Rank by fit, with the reasons shown, using the seller profile.',
-  },
+];
+
+const EXCLUDED = [
+  'Seller-specific pitches: the test company was fictional, so Rox correctly declined to tailor a pitch.',
+  'Empty states, integrations and People ranking: no integrations or real ICP were configured.',
+  'Agent previews and limits: templates were Enterprise-gated, and Rox documents previews, sandboxes and action limits.',
+  'Latency: one run each, not a benchmark.',
+  'Unusual test accounts in the workspace: I did not create them and their origin is unknown, so they are not treated as a product issue.',
 ];
 
 export default function Findings() {
@@ -74,13 +52,13 @@ export default function Findings() {
     <>
       <PageHead
         kicker="Rox product review · Sept 2026"
-        title="Making agent output trustworthy enough to act on"
-        sub="I explored every Rox surface (Home, Chat, Agents, Accounts, People, Sequences, Meetings, Opportunities, Apps, all 20 settings tabs) with a test workspace and ran real research jobs on OpenAI. Most gaps come down to one theme: agents produce claims, but the product doesn't track how confident each claim is, where it came from, or whether it agrees with the CRM."
+        title="From cited research to a record you can act on"
+        sub="I explored every Rox surface with a test workspace and ran a real account brief and account plan on OpenAI. The list is short on purpose: it only includes behavior I saw directly and could not have caused through my own test setup. The main theme is keeping what agents research in sync with the record, and showing how strong each citation is."
       />
       <div className="grid3">
-        <Card><div className="stat">124s</div><div className="stat-l">to finish an account brief</div></Card>
         <Card><div className="stat">20,000x</div><div className="stat-l">gap between the record's revenue and the agent's figure</div></Card>
-        <Card><div className="stat">4</div><div className="stat-l">accounts with loopback / metadata / malformed domains</div></Card>
+        <Card><div className="stat">0</div><div className="stat-l">conflicts flagged between the plan and the record</div></Card>
+        <Card><div className="stat">1</div><div className="stat-l">blog citation behind the recommended primary contact</div></Card>
       </div>
       <Card title="Findings, in priority order">
         <table className="table">
@@ -98,6 +76,9 @@ export default function Findings() {
             ))}
           </tbody>
         </table>
+      </Card>
+      <Card title="Deliberately left out">
+        <ul className="tldr">{EXCLUDED.map((e) => <li key={e} className="muted">{e}</li>)}</ul>
       </Card>
     </>
   );

@@ -50,36 +50,3 @@ export interface FieldSuggestion {
   rationale: string;
   evidenceClaimIds: string[];
 }
-
-export interface SellerProfile {
-  company: string;
-  website: string;
-  oneLiner: string;
-  capabilities: string[];
-  personas: string[];
-  proofPoints: string[];
-}
-
-export interface Angle {
-  title: string;
-  persona: string;
-  why: string;
-  claimIds: string[];
-  capability: string;
-  strength: number;
-}
-
-export interface DryRunStep {
-  name: string;
-  tool: string;
-  sideEffect: 'none' | 'crm_write' | 'email_send' | 'notification';
-  actionsPerAccount: number;
-}
-
-export interface AgentTemplate {
-  id: string;
-  name: string;
-  description: string;
-  schedule: 'daily' | 'weekly' | 'on_signal';
-  steps: DryRunStep[];
-}

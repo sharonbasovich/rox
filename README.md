@@ -1,31 +1,29 @@
-# Rox Labs: Trust Layer prototype
+# Rox Labs: research-to-record prototype
 
 A local prototype of improvements to [Rox](https://www.rox.com), built after a full walkthrough of the product
 (Home, Chat, Agents, Accounts, People, Sequences, Meetings, Opportunities, Apps, and every Settings tab)
-with a made-up test workspace ("Acme Test Corp") and real research runs on the OpenAI account.
+with a made-up test workspace ("Acme Test Corp") and real research runs on the OpenAI acc**Thesis:** Rox agents already do strong, cited research. Two things would make it safer to act on: keep what
+the agents say in sync with the record, and show how strong each citation is. The list below only includes
+behavior observed directly in Rox that was not caused by the test setup.
 
-**Thesis:** Rox agents already do strong research. What's missing is a way to tell which claims are safe to act
-on, and to keep what the agents say in sync with the record. Every prototype here comes from a specific
-failure observed in the product.
+| # | Finding (observed in Rox) | Prototype | Route |
+|---|---------------------------|-----------|-------|
+| 1 | The Rox-enriched `Revenue` field on OpenAI reads `2000000`, while the Account Plan agent wrote "$40B revenue run rate". Nothing flagged the conflict. | Record Truth-Check | `/account` |
+| 2 | The new CRO was cited only to derrick-app.com (a sales-tool blog), then became the brief's primary outreach target. Citation chips don't show source strength. | Evidence Ledger | `/ledger` |
+| 3 | The enriched `Industries` field renders as a raw JSON string. | Record Truth-Check | `/account` |
+| 4 | "New sequence" creates `Sequence - <date>` before any step is added or saved. | Brief only | - |
 
-| # | Prototype | Observed in Rox | Route |
-|---|-----------|-----------------|-------|
-| 1 | Record Truth-Check | Record `Revenue = 2000000` while the Account Plan agent wrote "$40B run rate". `Industries` renders raw JSON. | `/account` |
-| 2 | Evidence Ledger | "New CRO" came from one blog (derrick-app.com) and then became the primary outreach target. | `/ledger` |
-| 3 | Seller Context | Chat said "I can't tailor the pitch to a specific SKU": onboarding only captures a company name. | `/seller` |
-| 4 | Agent Dry Run | Agent templates go live with no preview of target accounts, side effects or action budget. | `/dry-run` |
-| 5 | Eval Console | Brief took 124s (first text ~12s), plan 94s; grounding/personalization are not scored per output. | `/evals` |
-| 6 | Domain Guardrails | Workspace contains accounts with domains `127.0.0.1`, `169.254.169.254`, `a'b.example`. | `/accounts` |
+**Deliberately left out:** seller-specific pitches (fictional test company, so Rox rightly declined), empty
+states / integrations / People ranking (not configured), agent previews and action limits (Enterprise-gated,
+and documented by Rox), latency (single runs), and unusual test accounts in the workspace (origin unknown).
 
-Findings with no prototype (brief only): a unified "what unlocks what" plan/integration readiness view,
-creating a sequence only on first save (not on "New sequence" click), and ranking People search results by ICP fit.
+ fit.
 
 ## Architecture
 
-- `shared/`: pure, tested logic (claim scoring, confidence propagation, record reconciliation, domain
-  validation, dry-run simulation, evals). Data in `shared/data.ts` is replayed from the recorded Rox session.
-- `server/`: Express API. AI jobs (`verify_claims`, `seller_angles`) run as **Devin sessions with a JSON
-  structured-output schema** (`server/jobs.ts`). Without `DEVIN_API_KEY`, jobs fall back to deterministic,
+- `shared/`: pure, tested logic (claim scoring, confidence propagation, record reconciliation). Data in `shared/data.ts` is replayed from the recorded Rox session.
+- `server/`: Express API. The `verify_claims` AI job runs as a **Devin session with a JSON
+  structured-output schema** (`server/jobs.ts`). Without `DEVIN_API_KEY`, it falls back to deterministic,
   recorded outputs, so the demo also works offline.
 - `src/`: React + Vite UI styled after Rox.
 

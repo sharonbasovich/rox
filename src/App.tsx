@@ -5,10 +5,6 @@ import { NAV } from './lib/nav.tsx';
 import Findings from './pages/Findings.tsx';
 import Account from './pages/Account.tsx';
 import Ledger from './pages/Ledger.tsx';
-import Seller from './pages/Seller.tsx';
-import DryRun from './pages/DryRun.tsx';
-import Evals from './pages/Evals.tsx';
-import Accounts from './pages/Accounts.tsx';
 
 function RoxLogo() {
   return (
@@ -28,7 +24,7 @@ export default function App() {
   return (
     <div className="site">
       <div className="announce">
-        Rox Labs: a trust layer for revenue agents <ChevronRight size={14} />
+        Rox Labs: keeping agent research and the record in sync <ChevronRight size={14} />
       </div>
       <header className="topnav">
         <div className="topnav-in">
@@ -50,10 +46,6 @@ export default function App() {
           <Route path="/findings" element={<Findings />} />
           <Route path="/account" element={<Account />} />
           <Route path="/ledger" element={<Ledger />} />
-          <Route path="/seller" element={<Seller />} />
-          <Route path="/dry-run" element={<DryRun />} />
-          <Route path="/evals" element={<Evals />} />
-          <Route path="/accounts" element={<Accounts />} />
         </Routes>
       </main>
       <footer className="footer">
@@ -65,11 +57,7 @@ export default function App() {
           <div className="footer-cols">
             <div>
               <div className="fh">Prototypes</div>
-              {NAV.slice(1, 4).map((n) => <NavLink key={n.to} to={n.to}>{n.label}</NavLink>)}
-            </div>
-            <div>
-              <div className="fh">Safety</div>
-              {NAV.slice(4).map((n) => <NavLink key={n.to} to={n.to}>{n.label}</NavLink>)}
+              {NAV.slice(1).map((n) => <NavLink key={n.to} to={n.to}>{n.label}</NavLink>)}
             </div>
             <div>
               <div className="fh">Review</div>

@@ -1,4 +1,4 @@
-import type { AgentTemplate, Claim, RecordField, SellerProfile } from './types.ts';
+import type { Claim, RecordField } from './types.ts';
 
 /** "Now" for the recorded Rox session this prototype replays (captured 2026-09-27). */
 export const CAPTURED_AT = '2026-09-27';
@@ -19,8 +19,8 @@ const s = (domain: string, title: string, publishedAt?: string) => ({ domain, ti
 
 /**
  * Atomic claims extracted from two recorded Rox runs on the same account:
- *  - "chat": Chat -> "Give me an account brief on OpenAI ..." (124s)
- *  - "plan": Account -> Account Plan -> "Build my account plan" (94s)
+ *  - "chat": Chat -> "Give me an account brief on OpenAI ..."
+ *  - "plan": Account -> Account Plan -> "Build my account plan"
  * Source domains are the citation chips Rox rendered next to each statement.
  */
 export const CLAIMS: Claim[] = [
@@ -114,70 +114,3 @@ export const CLAIMS: Claim[] = [
 export const CLAIM_DEPENDENCIES: Record<string, string[]> = {
   primary_target: ['cro'],
 };
-
-export const RUN_TELEMETRY = [
-  { run: 'chat', label: 'Chat account brief', firstTokenSec: 12, totalSec: 124, toolCalls: 9 },
-  { run: 'plan', label: 'Build my account plan', firstTokenSec: 8, totalSec: 94, toolCalls: 11 },
-];
-
-/** Test workspace seller (made-up company, per the user). */
-export const DEFAULT_SELLER: SellerProfile = {
-  company: 'Acme Test Corp',
-  website: 'acmetest.example',
-  oneLiner: 'Evaluation, guardrails and audit trails for production AI agents.',
-  capabilities: [
-    'agent evaluation',
-    'guardrails',
-    'audit logs',
-    'revenue analytics',
-  ],
-  personas: ['CRO', 'CFO', 'Head of Applied AI', 'CISO'],
-  proofPoints: ['Cut agent incident rate 63% at a Fortune 100 bank (fictional)'],
-};
-
-/** Accounts visible in the test workspace, including the malformed ones that appeared during exploration. */
-export const WORKSPACE_ACCOUNTS = [
-  { name: 'OpenAI', domain: 'openai.com' },
-  { name: 'ssrftest-29757-27044', domain: '127.0.0.1' },
-  { name: 'ssrftest-12716-24991', domain: 'normaltest.example' },
-  { name: 'm', domain: '169.254.169.254' },
-  { name: 'ssrftest-25078-27935', domain: "a'b.example" },
-];
-
-export const AGENT_TEMPLATES: AgentTemplate[] = [
-  {
-    id: 'signals_outbound',
-    name: 'Signals Driven Outbound Enrollment',
-    description: 'Watch account signals and enroll matching contacts into a sequence.',
-    schedule: 'daily',
-    steps: [
-      { name: 'Scan insights for signals', tool: 'insights.search', sideEffect: 'none', actionsPerAccount: 1 },
-      { name: 'Research account', tool: 'web.search', sideEffect: 'none', actionsPerAccount: 3 },
-      { name: 'Find matching contacts', tool: 'people.search', sideEffect: 'none', actionsPerAccount: 1 },
-      { name: 'Enroll in sequence', tool: 'sequences.enroll', sideEffect: 'email_send', actionsPerAccount: 2 },
-    ],
-  },
-  {
-    id: 'pipeline_risk',
-    name: 'Pipeline Risk Report',
-    description: 'Weekly review of open opportunities with risk flags and next steps.',
-    schedule: 'weekly',
-    steps: [
-      { name: 'Load open opportunities', tool: 'crm.query', sideEffect: 'none', actionsPerAccount: 1 },
-      { name: 'Pull recent activity', tool: 'activity.search', sideEffect: 'none', actionsPerAccount: 1 },
-      { name: 'Update risk field', tool: 'crm.update', sideEffect: 'crm_write', actionsPerAccount: 1 },
-      { name: 'Email report', tool: 'notify.email', sideEffect: 'notification', actionsPerAccount: 0 },
-    ],
-  },
-  {
-    id: 'weekly_prioritization',
-    name: 'Weekly Account Prioritization',
-    description: 'Rank accounts by fit and intent and write a priority tier.',
-    schedule: 'weekly',
-    steps: [
-      { name: 'Enrich firmographics', tool: 'enrich.firmographics', sideEffect: 'none', actionsPerAccount: 1 },
-      { name: 'Research news', tool: 'web.search', sideEffect: 'none', actionsPerAccount: 2 },
-      { name: 'Write priority tier', tool: 'crm.update', sideEffect: 'crm_write', actionsPerAccount: 1 },
-    ],
-  },
-];
