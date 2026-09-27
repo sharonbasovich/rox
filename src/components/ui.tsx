@@ -1,0 +1,51 @@
+import type { ReactNode } from 'react';
+import type { Confidence } from '../../shared/types.ts';
+
+export function Card({ title, right, children }: { title?: ReactNode; right?: ReactNode; children: ReactNode }) {
+  return (
+    <section className="card">
+      {(title || right) && (
+        <header className="card-head">
+          <h3>{title}</h3>
+          <div>{right}</div>
+        </header>
+      )}
+      {children}
+    </section>
+  );
+}
+
+export function ConfidencePill({ c }: { c: Confidence }) {
+  return <span className={`pill pill-${c}`}>{c}</span>;
+}
+
+export function Tag({ children, tone = 'neutral' }: { children: ReactNode; tone?: 'neutral' | 'bad' | 'good' | 'warn' | 'ai' }) {
+  return <span className={`tag tag-${tone}`}>{children}</span>;
+}
+
+export function PageHead({ kicker, title, sub }: { kicker: string; title: string; sub: ReactNode }) {
+  return (
+    <div className="page-head">
+      <div className="kicker">{kicker}</div>
+      <h1>{title}</h1>
+      <p className="sub">{sub}</p>
+    </div>
+  );
+}
+
+export function JobStatus({ job, elapsed }: { job: { mode: string; status: string; sessionUrl?: string; devinStatus?: string; error?: string } | null; elapsed: number }) {
+  if (!job) return null;
+  return (
+    <div className={`jobbar jobbar-${job.status}`}>
+      <Tag tone="ai">{job.mode === 'live' ? 'Devin live' : 'Recorded'}</Tag>
+      <span>
+        {job.status === 'running' && `Running: ${elapsed}s${job.devinStatus ? ` (${job.devinStatus})` : ''}`}
+        {job.status === 'done' && 'Complete'}
+        {job.status === 'error' && `Error: ${job.error}`}
+      </span>
+      {job.sessionUrl && (
+        <a href={job.sessionUrl} target="_blank" rel="noreferrer">Open agent run ↗</a>
+      )}
+    </div>
+  );
+}
